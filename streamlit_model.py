@@ -9,7 +9,7 @@ model = pickle.load(open(file, 'rb'))
 st.title("Классификация пассажиров титаника")
 image = Image.open('titanic.jpg')
 st.image(image)
-st.sidebar.header("Введите свои данные:")
+st.sidebar.header("Ваши данные:")
 sex = st.sidebar.selectbox("Пол", 
                    ('Мужской', 'Женский'))
 embarked = st.sidebar.selectbox("Порт посадки", 
@@ -45,6 +45,6 @@ df = pd.DataFrame(data, index=[0])
 pred = model.predict(df)
 
 if pred[0] == 1:
-    st.write("Вы выжили!")
+    st.markdown("### :red[Ура! Вы выжили!] :grinning::tada:")
 else:
-    st.write("К сожалению, Вы не выжили")
+    st.markdown("### К сожалению, Вам не повезло :pensive:")
