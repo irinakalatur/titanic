@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from catboost import CatBoostClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_curve, roc_auc_score, auc
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_curve, auc
 
 # загрузка данных
 df = pd.read_csv('train.csv')
@@ -161,14 +161,13 @@ lr.fit(X_train, y_train)
 lr_pred = lr.predict(X_test)
 
 # строим матрицу ошибок
-c_matrix = confusion_matrix(y_test, lr_pred)
+lr_matrix = confusion_matrix(y_test, lr_pred)
 true_names = ['True Survived', 'True Not Survived']
 pred_names = ['Predicted Survived', 'Predicted Not Survived']
-df_c_matrix = pd.DataFrame(c_matrix, index=true_names, columns=pred_names)
-sns.heatmap(df_c_matrix, annot=True, fmt='d')
+df_lr_matrix = pd.DataFrame(lr_matrix, index=true_names, columns=pred_names)
+sns.heatmap(df_lr_matrix, annot=True, fmt='d')
 plt.show()
 
-print('Logistic Regression Accuracy:', accuracy_score(y_test, lr_pred))
 print(classification_report(y_test, lr_pred))
 
 lr_pred_prob = lr.predict_proba(X_test)[::,1]
@@ -186,7 +185,12 @@ clf = DecisionTreeClassifier()
 clf.fit(X_train, y_train)
 clf_pred = clf.predict(X_test)
 
-print('Decision Tree Classifier Accuracy:', accuracy_score(y_test, clf_pred))
+# строим матрицу ошибок
+d_matrix = confusion_matrix(y_test, clf_pred)
+df_d_matrix = pd.DataFrame(d_matrix, index=true_names, columns=pred_names)
+sns.heatmap(df_d_matrix, annot=True, fmt='d')
+plt.show()
+
 print(classification_report(y_test, clf_pred))
 
 clf_pred_prob = clf.predict_proba(X_test)[::,1]
@@ -206,7 +210,11 @@ cbcf.fit(X_train, y_train,cat_features=cat_features, eval_set=(X_test, y_test),v
 print(f"Модель обучена: {str(cbcf.is_fitted())}")
 cbcf_pred = cbcf.predict(X_test)
 
-print('CatBoost Classifier Accuracy:', accuracy_score(y_test, cbcf_pred))
+cb_matrix = confusion_matrix(y_test, cbcf_pred)
+df_cb_matrix = pd.DataFrame(cb_matrix, index=true_names, columns=pred_names)
+sns.heatmap(df_cb_matrix, annot=True, fmt='d')
+plt.show()
+
 print(classification_report(y_test, cbcf_pred))
 
 cbcf_pred_prob = cbcf.predict_proba(X_test)[::,1]
