@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from catboost import CatBoostClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_curve, auc
+from sklearn.metrics import confusion_matrix, classification_report, roc_curve, auc
 
 # загрузка данных
 df = pd.read_csv('train.csv')
@@ -37,7 +37,7 @@ def age_percent(row):
     return [float(col) / sum(row) for col in row][0]
 
 ''' Выводим статистику выживших по возрасту.
-    Пассажиры в возрасте 15-20 лет, 65-40 лет и 60 лет имеют меньший шанс на выживание, 
+    Пассажиры в возрасте 15-20 лет, 35-40 лет и 60 лет имеют меньший шанс на выживание, 
     пассажир в возрасте 70 лет не выжил, пассажир в возрасте 80 лет выжил.
 '''
 new_age_survived = pd.DataFrame(new_age_survived.apply(age_percent, axis=1))

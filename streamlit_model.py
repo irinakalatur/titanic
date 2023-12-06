@@ -3,8 +3,8 @@ import pandas as pd
 from PIL import Image
 import pickle
 
-file = 'model.pkl'
-model = pickle.load(open(file, 'rb'))
+file_model = 'model.pkl'
+model = pickle.load(open(file_model, 'rb'))
 
 st.title("Классификация пассажиров титаника")
 image = Image.open('titanic.jpg')
@@ -22,12 +22,12 @@ sibsp = st.sidebar.slider("Количество ваших братьев / се
 parch = st.sidebar.slider("Количество ваших детей / родителей на борту",
                                min_value=0, max_value=6, value=0, step=1)
 
-if sex == "Мужской": sex = "male" 
-else: sex = "female"
+if sex == "Мужской": sex = 1 
+else: sex = 0
 
-if embarked == "Шербур-Октевиль": embarked = "C"
-elif embarked == "Квинстаун": embarked = "Q"
-else: embarked = "S"
+if embarked == "Шербур-Октевиль": embarked = 0
+elif embarked == "Квинстаун": embarked = 1
+else: embarked = 2
 
 if pclass == "Первый": pclass = 1
 elif pclass == "Второй": pclass = 2
@@ -41,10 +41,12 @@ data = {"Pclass" : pclass,
         "Embarked": embarked}
 
 df = pd.DataFrame(data, index=[0])
-
 pred = model.predict(df)
+pred_prob = model.predict_proba(df)
 
 if pred[0] == 1:
     st.markdown("### :red[Ура! Вы выжили!] :grinning::tada:")
+    st.write(f"Вероятность: {round(pred_prob[0][1]*100, 1)}%")
 else:
     st.markdown("### К сожалению, Вам не повезло :pensive:")
+    st.write(f"Вероятность: {round(pred_prob[0][0]*100, 1)}%")
